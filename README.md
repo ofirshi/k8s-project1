@@ -24,7 +24,7 @@ docker image tag rmqp-example-master_producer:latest localhost:5000/producer/rmq
 
 docker image push localhost:5000/producer/rmqp-example-master_producer:latest
 
-# Checks
+# Checks:
 curl localhost:5000/v2/_catalog
 
 curl localhost:5000/v2/consumer/rmqp-example-master_consumer/tags/list
@@ -40,3 +40,7 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 
 helm upgrade --install rabbitmq --set auth.username=admin,auth.password=secretpassword,auth.erlangCookie=secretcookie,metrics.enabled=true bitnami/rabbitmq
+
+
+# Helm Chart:
+helm install k8s-project1 . --dry-run
