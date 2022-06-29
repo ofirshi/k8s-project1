@@ -31,7 +31,7 @@ spec:
         - name: producer
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.DockerRegistryIP }}:80/producer/rmqp-example-master_producer:latest"
+          image: "{{ .Values.DockerRegistryIP }}:5000/producer/rmqp-example-master_producer:latest"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -81,7 +81,7 @@ spec:
         - name: consumer
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.DockerRegistryIP }}:80/consumer/rmqp-example-master_consumer:latest"
+          image: "{{ .Values.DockerRegistryIP }}:5000/consumer/rmqp-example-master_consumer:latest"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
