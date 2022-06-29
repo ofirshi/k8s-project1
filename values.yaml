@@ -4,6 +4,9 @@
 
 replicaCount: 1
 
+imagePullPolicy: IfNotPresent
+DockerRegistryIP: 192.168.89.134
+
 image:
   repository: nginx
   pullPolicy: IfNotPresent
