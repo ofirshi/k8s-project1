@@ -1,7 +1,10 @@
 # k8s-project1
 
 
-# rmqp-example:
+# minikube:
+
+minikube delete --all=true --purge=true
+
 docker image prune -a -f
 
 minikube start --cpus 2 --memory 4096 --driver vmware --insecure-registry $(minikube ip):5000 --extra-config=apiserver.service-node-port-range=1-65535
@@ -13,6 +16,9 @@ minikube config set WantUpdateNotification false
 kubectl get service --namespace kube-system
 
 kubectl port-forward --namespace kube-system service/registry 5000:80
+
+
+# rmqp-example:
 
 git clone https://github.com/avielb/rmqp-example
 
