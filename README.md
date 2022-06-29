@@ -7,7 +7,7 @@ minikube delete --all=true --purge=true
 
 docker image prune -a -f
 
-minikube start --cpus 2 --memory 4096 --driver vmware --insecure-registry $(minikube ip):5000 --extra-config=apiserver.service-node-port-range=1-65535
+minikube start --cpus 2 --memory 4096 --driver vmware --insecure-registry 0.0.0.0:5000 --extra-config=apiserver.service-node-port-range=1-65535
 
 minikube addons enable registry
 
