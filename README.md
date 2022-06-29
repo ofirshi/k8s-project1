@@ -35,9 +35,9 @@ docker image push $(minikube ip):5000/producer/rmqp-example-master_producer:late
 # Checks:
 curl $(minikube ip):5000/v2/_catalog
 
-curl $(minikube ip):5000/v2/consumer/rmqp-example-master_consumer/tags/list
+curl -s -S $(minikube ip):5000/v2/consumer/rmqp-example-master_consumer/tags/list
 
-curl $(minikube ip):5000/v2/producer/rmqp-example-master_producer/tags/list
+curl -s -S $(minikube ip):5000/v2/producer/rmqp-example-master_producer/tags/list
 
 
 
