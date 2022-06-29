@@ -8,6 +8,8 @@ minikube start --cpus 2 --memory 4096 --driver vmware --insecure-registry $(mini
 
 minikube addons enable registry
 
+minikube config set WantUpdateNotification false
+
 kubectl get service --namespace kube-system
 
 kubectl port-forward --namespace kube-system service/registry 5000:80
@@ -44,5 +46,7 @@ helm upgrade --install rabbitmq --set auth.username=admin,auth.password=secretpa
 
 # Helm Chart:
 helm uninstall k8s-project1
+
 helm install k8s-project1 . --dry-run
+
 helm upgrade --install k8s-project1 .
