@@ -33,7 +33,7 @@ docker image tag rmqp-example-master_producer:latest $(minikube ip):5000/produce
 docker image push $(minikube ip):5000/producer/rmqp-example-master_producer:latest
 
 # Checks:
-curl $(minikube ip):5000/v2/_catalog
+curl -s -S $(minikube ip):5000/v2/_catalog
 
 curl -s -S $(minikube ip):5000/v2/consumer/rmqp-example-master_consumer/tags/list
 
