@@ -19,6 +19,8 @@ minikube config set WantUpdateNotification false
 
 git clone https://github.com/avielb/rmqp-example
 
+cd rmqp-example/
+
 docker-compose build
 
 
