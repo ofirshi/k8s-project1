@@ -9,36 +9,34 @@ docker image prune -a -f
 
 minikube start --cpus 2 --memory 4096 --driver vmware --insecure-registry 0.0.0.0:5000 --extra-config=apiserver.service-node-port-range=1-65535
 
-minikube addons enable registry
 
 minikube config set WantUpdateNotification false
 
-kubectl get service --namespace kube-system
-
-kubectl port-forward --namespace kube-system service/registry 5000:80
 
 
-# rmqp-example:
+
+# rmqp-example create images:
 
 git clone https://github.com/avielb/rmqp-example
 
 docker-compose build
 
-docker image tag rmqp-example-master_consumer:latest $(minikube ip):5000/consumer/rmqp-example-master_consumer:latest
 
-docker image push $(minikube ip):5000/consumer/rmqp-example-master_consumer:latest
+# Docker login:
 
-docker image tag rmqp-example-master_producer:latest $(minikube ip):5000/producer/rmqp-example-master_producer:latest
+docker login --username=<user> --password-stdin <<<'password'
 
-docker image push $(minikube ip):5000/producer/rmqp-example-master_producer:latest
 
-# Checks:
-curl -s -S $(minikube ip):5000/v2/_catalog
+# Tag images and push to docker hub: 
 
-curl -s -S $(minikube ip):5000/v2/consumer/rmqp-example-master_consumer/tags/list
 
-curl -s -S $(minikube ip):5000/v2/producer/rmqp-example-master_producer/tags/list
+docker image tag rmqp-example-master_consumer:latest ofirsh11/rmqp-example-master_consumer:latest
 
+docker image push ofirsh11/rmqp-example-master_consumer:latest
+
+docker image tag rmqp-example-master_producer:latest ofirsh11/rmqp-example-master_producer:latest
+
+docker image push ofirsh11/rmqp-example-master_producer:latest
 
 
 
