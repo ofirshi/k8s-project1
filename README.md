@@ -6,6 +6,88 @@
 2. Minikube / Kubernetes Cluster
 3. Docker Hub Account (https://hub.docker.com/) / Github registry (https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
 
+
+# Install & config gcloud
+https://cloud.google.com/sdk/docs/install
+
+# Create GCP VM
+gcloud compute --project=<GCP_PRJ> firewall-rules create anyall --direction=INGRESS --priority=100 --network=default --action=ALLOW --rules=all --source-ranges=0.0.0.0/0 --target-tags=any
+
+gcloud compute disks create stagingdisk --image-project centos-cloud --image-family centos-7 --zone us-east1-b --project=<GCP_PRJ>
+
+gcloud compute images create nested-vm-image --source-disk=stagingdisk --source-disk-zone=us-east1-b --licenses=https://www.googleapis.com/compute/v1/projects/vm-options/global/licenses/enable-vmx  --project=<GCP_PRJ>
+
+gcloud compute disks delete stagingdisk --zone us-east1-b  --project=<GCP_PRJ> -q
+
+gcloud compute instances create nested-vm-image1 --zone us-east1-b --min-cpu-platform "Intel Haswell" --machine-type n1-standard-16 --image nested-vm-image  --project=<GCP_PRJ> --boot-disk-size=300GB --enable-display-device --boot-disk-type=pd-ssd --tags=any --can-ip-forward --metadata serial-port-enable=TRUE
+
+gcloud compute ssh nested-vm-image1 --zone=us-east1-b
+
+
+
+
+
+
+# Install Software:
+sudo yum install -y kubectl
+
+sudo mkdir kubectl
+
+sudo chmod +x kubectl
+
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+sudo yum install kernel-headers-$(uname -r) kernel-devel kernel-devel-$(uname -r) kernel-headers make patch gcc wget conntrack -y
+
+sudo yum install qemu-kvm libvirt libvirt-python libguestfs-tools virt-install -y
+
+sudo modprobe -r kvm_intel
+
+sudo modprobe kvm_intel nested=1
+
+sudo touch /etc/modprobe.d/kvm_intel.conf
+
+sudo echo "options kvm_intel nested=1" > /etc/modprobe.d/kvm_intel.conf
+
+sudo systemctl restart libvirtd.service
+
+sudo systemctl enable libvirtd.service
+
+sudo wget https://download.docker.com/linux/centos/docker-ce.repo -O /etc/yum.repos.d/docker.repo
+
+sudo yum install docker-ce -y
+
+sudo yum-complete-transaction --cleanup-only
+
+sudo systemctl start docker
+
+sudo systemctl enable docker
+
+sudo usermod -aG kvm $USER
+
+sudo usermod -aG libvirt $USER
+
+sudo wget https://download.virtualbox.org/virtualbox/rpm/el/virtualbox.repo -P /etc/yum.repos.d
+
+sudo yum install VirtualBox-6.1 -y
+
+sudo systemctl start vboxdrv 
+
+sudos systemctl status vboxdrv
+
+sudo curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube
+
+sudo cp minikube /usr/bin/
+
+sudo wget https://download.virtualbox.org/virtualbox/6.1.34/Oracle_VM_VirtualBox_Extension_Pack-6.1.34.vbox-extpack
+
+sudo VBoxManage extpack install --replace --accept-license=33d7284dc4a0ece381196fda3cfe2ed0e1e8e7ed7f27b9a9ebc4ee22e24bd23c Oracle_VM_VirtualBox_Extension_Pack-6.1.34.vbox-extpack
+
+
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+
+
 # minikube:
 
 minikube stop
@@ -14,7 +96,8 @@ minikube delete --all=true --purge=true
 
 docker image prune -a -f
 
-minikube start --cpus 4 --memory 8196 --driver vmware
+minikube start --kubernetes-version=stable --driver=kvm2 --cpus 4 --memory 8192
+
 
 ### Modify settings:
 minikube config set cpus 4
@@ -40,6 +123,11 @@ docker-compose build --no-cache --pull --quiet
 # Docker login:
 
 docker login --username=<user> --password-stdin <<<'password'
+
+OR:
+
+https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+
 
 
 # Tag images and push to docker hub: 
