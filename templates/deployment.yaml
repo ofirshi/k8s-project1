@@ -13,40 +13,24 @@ spec:
       producer.service: producer
   template:
     metadata:
-     {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         producer.service: producer
     spec:
-     {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "k8s-project1.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: producer
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.DockerRegistryIP }}:5000/producer/rmqp-example-master_producer:latest"
+          image: ghcr.io/chkp-ofirs/producer:latest
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+          args:
+            - python
+            - producer.py
+            - -p
+            - "5672"
+            - -s
+            - rabbitmq
+            - -m
+            - Hello
+            - -r
+            - "30"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -63,37 +47,17 @@ spec:
       consumer.service: consumer
   template:
     metadata:
-     {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         consumer.service: consumer
     spec:
-     {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "k8s-project1.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: consumer
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.DockerRegistryIP }}:5000/consumer/rmqp-example-master_consumer:latest"
+          image: ghcr.io/chkp-ofirs/consumer:latest
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+          args:
+            - python
+            - consumer.py
+            - -p
+            - "5672"
+            - -s
+            - rabbitmq

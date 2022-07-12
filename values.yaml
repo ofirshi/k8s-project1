@@ -7,10 +7,17 @@ replicaCount: 1
 imagePullPolicy: IfNotPresent
 DockerRegistryIP: 192.168.89.134
 
+rabbitmqmetrics:
+    metrics.enabled: true
+    auth.username: admin
+    auth.password: secretpassword
+    auth.erlangCookie: secretcookie
+    persistence.existingClaim: task-pv-claim
+    volumePermissions.enabled: true
+
 image:
   repository: nginx
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
 imagePullSecrets: []

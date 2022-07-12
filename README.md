@@ -1,5 +1,10 @@
 # k8s-project1
 
+# Prerequisites
+
+1. Jenkins Installed (https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/VALUES_SUMMARY.md)
+2. Minikube / Kubernetes Cluster
+3. Docker Hub Account (https://hub.docker.com/) / Github registry (https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
 
 # minikube:
 
@@ -104,7 +109,25 @@ minikube service rabbitmq --url
 helm uninstall k8s-project1 --dry-run
                                                     
 helm uninstall k8s-project1
+
+helm dependency update
                                                     
-helm install k8s-project1 . --dry-run
+helm upgrade --install k8s-project1 . --dry-run
 
 helm upgrade --install k8s-project1 .
+
+
+# Jenkins Install
+
+(https://devopscube.com/setup-jenkins-on-kubernetes-cluster/)
+
+helm repo remove jenkins
+helm uninstall jenkins
+
+helm repo add jenkins https://charts.jenkins.io
+
+helm repo update
+
+helm upgrade --install jenkins jenkins/jenkins --set controller.adminPassword=EfpkNXuBNyBm7Xbw,controller.installLatestSpecifiedPlugins=true --wait --cleanup-on-fail --atomic
+
+kubectl --namespace default port-forward svc/jenkins 8080:8080 --address=0.0.0.0
