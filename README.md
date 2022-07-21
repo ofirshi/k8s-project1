@@ -1,4 +1,6 @@
 # k8s-project1
+![alt text](https://github.com/ofirshi/k8s-project1/blob/main/Kubernetes_Project.jpg?raw=true)
+
 
 # Prerequisites
 
