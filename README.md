@@ -1,4 +1,14 @@
-# k8s-project1
+## About K8s RabbitMQ project
+
+The project infrastructure is based on a queueing mechanism implemented using RabbitMQ.
+
+This is the meaning of each component in the system:
+1. Producer - will send messages every X seconds to a queue found in rabbitmq server.
+2. RabbitMQ - an application that is able to store data in a queue fashion allowing us to
+have the ability to maintain a queue of messages
+3. Consumer - will listen to new messages on a queue in RabbitMQ server and will print
+them to STDOUT.
+
 ![alt text](https://github.com/ofirshi/k8s-project1/blob/main/Kubernetes_Project.jpg?raw=true)
 
 
