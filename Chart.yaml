@@ -32,4 +32,5 @@ dependencies:
       - rabbitmq
     import-values:
       - rabbitmqmetrics
+      #- rabbitmqfolder/rabbitmqvalues.yaml
   

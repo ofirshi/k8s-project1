@@ -7,13 +7,6 @@ replicaCount: 1
 imagePullPolicy: IfNotPresent
 DockerRegistryIP: 192.168.89.134
 
-rabbitmqmetrics:
-    metrics.enabled: true
-    auth.username: admin
-    auth.password: secretpassword
-    auth.erlangCookie: secretcookie
-    persistence.existingClaim: task-pv-claim
-    volumePermissions.enabled: true
 
 image:
   repository: nginx
@@ -90,3 +83,22 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+
+rabbitmqmetrics:
+  global:
+    # enabled is the master enabled switch. Setting this to true or false
+    # will enable or disable all the components within this chart by default.
+    enabled: true
+    nameOverride: rabbitmq
+    fullnameOverride: rabbitmq
+    metrics.enabled: true
+    auth.username: guest
+    auth.password: guest
+    persistence.existingClaim: task-pv-claim
+    volumePermissions.enabled: true
+    # Used to define custom django.fullname in template.
+    projectName: "microservice1"
+    # image sets the repo,tag and pullPolicy of the project
+    image:
+      pullPolicy: Always

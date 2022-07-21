@@ -160,7 +160,10 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 
 helm repo update
 
-helm upgrade --install rabbitmq --set auth.username=guest,auth.password=guest,auth.erlangCookie=secretcookie,metrics.enabled=true,service.type=NodePort bitnami/rabbitmq
+helm upgrade --install rabbitmq --set auth.username=guest,auth.password=guest,metrics.enabled=true,service.type=NodePort bitnami/rabbitmq
+
+
+Uninstall: helm uninstall rabbitmq && helm repo remove bitnami
 
 ## RabbitMQ 
    
@@ -210,7 +213,13 @@ helm uninstall k8s-project1 --dry-run
                                                     
 helm uninstall k8s-project1
 
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm repo update
+
 helm dependency update
+
+helm dependency build
                                                     
 helm upgrade --install k8s-project1 . --dry-run
 

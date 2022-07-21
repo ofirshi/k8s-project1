@@ -3,3 +3,5 @@
 *.tgz
 Chart.lock
 *.tar
+*.exe
+Chart.lock
