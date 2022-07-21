@@ -160,12 +160,12 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 
 helm repo update
 
-helm upgrade --install rabbitmq --set auth.username=user,auth.password=q0GVH1id3Ks9ukzc,auth.erlangCookie=secretcookie,metrics.enabled=true,service.type=NodePort bitnami/rabbitmq
+helm upgrade --install rabbitmq --set auth.username=guest,auth.password=guest,auth.erlangCookie=secretcookie,metrics.enabled=true,service.type=NodePort bitnami/rabbitmq
 
 ## RabbitMQ 
    
 Credentials:
-    echo "Username      : user"
+    echo "Username      : guest"
     echo "Password      : $(kubectl get secret --namespace default rabbitmq -o jsonpath="{.data.rabbitmq-password}" | base64 -d)"
     echo "ErLang Cookie : $(kubectl get secret --namespace default rabbitmq -o jsonpath="{.data.rabbitmq-erlang-cookie}" | base64 -d)"
 

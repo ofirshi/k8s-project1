@@ -14,7 +14,7 @@ def on_message_received(ch, method, properties, body):
 
 
 def consumer():
-    credentials = pika.PlainCredentials('user', 'q0GVH1id3Ks9ukzc')
+    credentials = pika.PlainCredentials('guest', 'guest')
     connection_parameters = pika.ConnectionParameters('rabbitmq',
                                                       5672,
                                                       '/',
