@@ -2,3 +2,4 @@
 .idea/*
 *.tgz
 Chart.lock
+*.tar
