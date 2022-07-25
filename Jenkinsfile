@@ -4,6 +4,8 @@ pipeline {
         stage('Checkout') {
             steps {
             deleteDir()
+            sh 'git config --global user.name "$HUBUSER"'
+            sh 'git config --global user.email "$HUBUSER@yourdomain.com"'
             checkout scm
             }
         }
@@ -41,7 +43,7 @@ pipeline {
 			sh 'chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl '
             sh' curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod +x get_helm.sh && ./get_helm.sh'
 			sh 'git config --global user.name "$HUBUSER"'
-            sh 'git config --global user.email "ofirs@checkpoint.com"'
+            sh 'git config --global user.email "$HUBUSER@yourdomain.com"'
 			sh 'chown -R 1000:1000 *'
 			dir ('$WORKSPACE/Bonuses/consumer'){
           	sh 'docker build -f Dockerfile -t ghcr.io/$HUBUSER/consumer:latest  . '
@@ -58,5 +60,12 @@ pipeline {
 	}
 	}
 	}
+     stage('Install Helm Chart') {
+            steps {
+            dir ('$WORKSPACE\helm\consumer')
+            {
+          	sh 'helm dependency update && helm dependency build && helm upgrade --install consumer . --wait --cleanup-on-fail --atomic '
+			}
+            }
 	}
 	}

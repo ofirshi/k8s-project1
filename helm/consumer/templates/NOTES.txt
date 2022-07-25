@@ -1,11 +1,3 @@
-Hi :)))
-
-It should be working now!
-
-make sure it's working (consumer, producer and rabbitmq).
-
-check the folowing:
-kubectl get pod
-kubectl get service.
-
-Note - it could take few minutes untill producer and consumer "see" the rabbitmq running.
+Producer is UP
+Consumer is UP
+Rabbitmq is UP
