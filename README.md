@@ -184,6 +184,6 @@ helm repo add jenkins https://charts.jenkins.io
 
 helm repo update
 
-helm upgrade --install jenkins jenkins/jenkins --set controller.adminPassword=EfpkNXuBNyBm7Xbw,controller.installLatestSpecifiedPlugins=true --wait --cleanup-on-fail --atomic
+helm upgrade --install jenkins jenkins/jenkins --set controller.adminPassword=EfpkNXuBNyBm7Xbw,controller.installLatestSpecifiedPlugins=false,controller.serviceType=NodePort --wait --cleanup-on-fail --atomic
 
 kubectl --namespace default port-forward svc/jenkins 8080:8080 --address=0.0.0.0
