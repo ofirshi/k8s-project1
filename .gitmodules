@@ -1,3 +1,0 @@
-[submodule "rmqp-example/rmqp-example"]
-	path = rmqp-example/rmqp-example
-	url = https://github.com/avielb/rmqp-example
