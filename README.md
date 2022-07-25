@@ -27,39 +27,71 @@ https://cloud.google.com/sdk/docs/install
 
 # Bare Metal:
 sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
 sudo curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
 sudo curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
 yum install conntrack git wget -y
+
 git clone https://github.com/Mirantis/cri-dockerd.git
+
 wget https://storage.googleapis.com/golang/getgo/installer_linux
+
 wget https://storage.googleapis.com/golang/getgo/installer_linux
+
 chmod +x ./installer_linux
+
 ./installer_linux
+
 source ~/.bash_profile
+
 cd cri-dockerd
+
 mkdir bin
+
 go get && go build -o bin/cri-dockerd
+
 mkdir -p /usr/local/bin
+
 install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/cri-dockerd
+
 cp -a packaging/systemd/* /etc/systemd/system
+
 sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
+
 systemctl daemon-reload
+
 systemctl enable cri-docker.service
+
 systemctl enable --now cri-docker.socket
+
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+
 [kubernetes]
+
 name=Kubernetes
+
 baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+
 enabled=1
+
 gpgcheck=1
+
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
 exclude=kubelet kubeadm kubectl
+
 EOF
 
 # Set SELinux in permissive mode (effectively disabling it)
+
 sudo setenforce 0
+
 sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
 sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
@@ -102,12 +134,18 @@ https://docs.github.com/en/packages/working-with-a-github-packages-registry/work
 # Create images:
 
 DOCKER_BUILDKIT=1 docker build  --no-cache --progress=plain  --label=consumer --tag=ghcr.io/chkp-ofirs/consumer:latest .
+
 docker push ghcr.io/chkp-ofirs/consumer:latest
+
 docker image rm ghcr.io/chkp-ofirs/consumer:latest
 
+
 DOCKER_BUILDKIT=1 docker build  --no-cache --progress=plain  --label=producer --tag=ghcr.io/chkp-ofirs/producer:latest .
+
 docker push ghcr.io/chkp-ofirs/producer:latest
+
 docker image rm ghcr.io/chkp-ofirs/producer:latest
+
 
 
 docker run  --rm -p 9422 -it ghcr.io/chkp-ofirs/consumer:latest /bin/bash
