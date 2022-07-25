@@ -42,13 +42,12 @@ pipeline {
             sh' curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod +x get_helm.sh && ./get_helm.sh'
 			sh 'git config --global user.name "$HUBUSER"'
             sh 'git config --global user.email "ofirs@checkpoint.com"'
-			sh 'git clone --recurse-submodules https://github.com/avielb/rmqp-example'
 			sh 'chown -R 1000:1000 *'
-			dir ('$WORKSPACE/rmqp-example/consumer'){
+			dir ('$WORKSPACE/Bonuses/consumer'){
           	sh 'docker build -f Dockerfile -t ghcr.io/$HUBUSER/consumer:latest  . '
 			}
 			sh 'docker push ghcr.io/$HUBUSER/consumer:latest'
-			dir ('$WORKSPACE/rmqp-example/producer'){
+			dir ('$WORKSPACE/Bonuses/producer'){
           	sh 'docker build -f Dockerfile -t ghcr.io/$HUBUSER/producer:latest  . '
 			}
 			sh 'docker push ghcr.io/$HUBUSER/producer:latest'
