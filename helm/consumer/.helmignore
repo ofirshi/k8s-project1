@@ -21,6 +21,3 @@
 .idea/
 *.tmproj
 .vscode/
-helm.exe
-*.tgz
-Chart.lock

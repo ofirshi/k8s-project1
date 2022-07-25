@@ -1,0 +1,3 @@
+Producer is UP! :)
+Producer run the following via run.sh file:
+python producer.py -p 5672 -s rabbitmq -m "$(date) Hello" -r 30

@@ -1,0 +1,19 @@
+apiVersion: v2
+name: producer
+version: 0.1.0
+description: A Helm chart for Kubernetes producer
+appVersion: 0.1.0
+keywords:
+  - kubernetes
+  - producer
+  - consumer
+  - rabbitmq
+maintainers:
+  - name: ofir
+    email: 75673005+chkp-ofirs@users.noreply.github.com
+icon: https://cncf-branding.netlify.app/img/projects/helm/icon/color/helm-icon-color.png
+engine: gotpl # The name of the template engine (optional, defaults to gotpl)
+type: application
+home: https://github.com/ofirshi/k8s-project1
+sources:
+    - https://github.com/chkp-ofirs?tab=packages

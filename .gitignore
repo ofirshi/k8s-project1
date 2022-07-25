@@ -1,7 +1,6 @@
-111/*
 .idea/*
 *.tgz
-Chart.lock
 *.tar
 *.exe
-Chart.lock
+old/*
+passwords.txt

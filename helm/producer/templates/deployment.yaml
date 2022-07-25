@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "producer.fullname" . }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "producer.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "producer.fullname" . }}
+  replicas: {{ .Values.replicaCount }} # by default is 1
+  minReadySeconds: 30 # by default is 0
+  template:
+    metadata:
+      labels:
+        {{- include "producer.selectorLabels" . | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
