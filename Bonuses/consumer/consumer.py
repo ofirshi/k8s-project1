@@ -20,13 +20,13 @@ try:
     
     args = parser.parse_args()
     if args.port == None:
-        args.port ='5672'
-        #print("Missing required argument: -p/--port")
-        #sys.exit(1)
+        args.port = '5672'
+        # print("Missing required argument: -p/--port")
+        # sys.exit(1)
     if args.server == None:
-        args.server= 'rabbitmq'
-        #print("Missing required argument: -s/--server")
-        #sys.exit(1)
+        args.server = 'rabbitmq'
+        # print("Missing required argument: -s/--server")
+        # sys.exit(1)
 except Exception as e:
     print(e)
     exit(1)
@@ -81,10 +81,10 @@ c.inc(1.6)  # Increment by given value
 
 # Decorate function with metric.
 @REQUEST_TIME.time()
-def process_request(t,server,port):
+def process_request(t, server, port):
     """A dummy function that takes some time."""
     time.sleep(t)
-    consumer(server , port)
+    consumer(server, port)
 
 
 if __name__ == '__main__':
@@ -93,7 +93,7 @@ if __name__ == '__main__':
         start_http_server(9422)
         # Generate some requests.
         while True:
-            process_request(random.random(),args.server , args.port)
+            process_request(random.random(), args.server, args.port)
     except Exception as e:
         print(e)
         exit(1)
