@@ -177,10 +177,14 @@ helm dependency update && helm dependency build && helm upgrade --install consum
 (https://devopscube.com/setup-jenkins-on-kubernetes-cluster/)
 
 helm repo remove jenkins
+                                                      
 helm uninstall jenkins
+                                                      
 kubectl delete serviceaccount jenkins
+                                                      
 kubectl delete clusterrolebinding.rbac.authorization.k8s.io jenkins
-cat<<EOF >>jenkins-rbac-admin.yaml  
+                                                      
+cat<<EOF >>jenkins-rbac-admin.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -200,6 +204,7 @@ subjects:
     name: jenkins
     namespace: default
 EOF
+  
 kubectl apply -f jenkins-rbac-admin.yaml
 
 helm repo add jenkins https://charts.jenkins.io
