@@ -42,6 +42,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
         stage('Check running containers') {
             container('helm') { 
                 sh '''
+                cat /etc/*-release
                 helm repo add bitnami https://charts.bitnami.com/bitnami
                 helm repo update
                 apk add git
