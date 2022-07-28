@@ -178,11 +178,34 @@ helm dependency update && helm dependency build && helm upgrade --install consum
 
 helm repo remove jenkins
 helm uninstall jenkins
+kubectl delete serviceaccount jenkins
+kubectl delete clusterrolebinding.rbac.authorization.k8s.io jenkins
+cat<<EOF >>jenkins-rbac-admin.yaml  
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: jenkins
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: jenkins
+    namespace: default
+EOF
+kubectl apply -f jenkins-rbac-admin.yaml
 
 helm repo add jenkins https://charts.jenkins.io
 
 helm repo update
 
-helm upgrade --install jenkins jenkins/jenkins --set controller.adminPassword=EfpkNXuBNyBm7Xbw,controller.installLatestSpecifiedPlugins=false,controller.serviceType=NodePort --wait --cleanup-on-fail --atomic
+helm upgrade --install jenkins jenkins/jenkins --set controller.adminPassword=EfpkNXuBNyBm7Xbw,controller.installLatestSpecifiedPlugins=false,controller.serviceType=NodePort,serviceAccount.name=jenkins,serviceAccountAgent.name=jenkins --wait --cleanup-on-fail --atomic
 
 kubectl --namespace default port-forward svc/jenkins 8080:8080 --address=0.0.0.0
