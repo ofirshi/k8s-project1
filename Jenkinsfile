@@ -4,9 +4,6 @@ pipeline {
         stage('Checkout') {
             steps {
             deleteDir()
-            sh 'git config --global user.name "$HUBUSER"'
-            sh 'git config --global user.email "$HUBUSER@yourdomain.com"'
-            checkout scm
             }
         }
 	stage ('DID - Build Producer') {
@@ -42,17 +39,13 @@ pipeline {
 			sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
 			sh 'chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl '
             sh' curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod +x get_helm.sh && ./get_helm.sh'
-			sh 'git config --global user.name "$HUBUSER"'
-            sh 'git config --global user.email "$HUBUSER@yourdomain.com"'
-			sh 'chown -R 1000:1000 *'
-			dir ('$WORKSPACE/Bonuses/consumer'){
-          	sh 'docker build -f Dockerfile -t ghcr.io/$HUBUSER/consumer:latest  . '
-			}
-			sh 'docker push ghcr.io/$HUBUSER/consumer:latest'
-			dir ('$WORKSPACE/Bonuses/producer'){
-          	sh 'docker build -f Dockerfile -t ghcr.io/$HUBUSER/producer:latest  . '
-			}
-			sh 'docker push ghcr.io/$HUBUSER/producer:latest'
+            git branch: 'main', url: 'https://github.com/ofirshi/k8s-project1.git'
+            sh 'git clone https://github.com/ofirshi/k8s-project1.git'
+          	sh 'chown -R 1000:1000 *'
+            sh 'cd ${workspace}/k8s-project1/Bonuse/consumer/ && DOCKER_BUILDKIT=1 docker build  --no-cache --progress=plain  --label=consumer --tag=ghcr.io/$HUBUSER/consumer:latest . '
+          	sh 'cd ${workspace}/k8s-project1/Bonuse/producer/ && DOCKER_BUILDKIT=1 docker build  --no-cache --progress=plain  --label=producer --tag=ghcr.io/$HUBUSER/producer:latest . '
+            sh 'docker image  push ghcr.io/$HUBUSER/consumer:latest'
+			sh 'docker image  push ghcr.io/$HUBUSER/producer:latest'
           	sh 'docker logout'
 			}
 		}
@@ -62,10 +55,12 @@ pipeline {
 	}
      stage('Install Helm Chart') {
             steps {
-            dir ('$WORKSPACE\helm\consumer')
-            {
-          	sh 'helm dependency update && helm dependency build && helm upgrade --install consumer . --wait --cleanup-on-fail --atomic '
-			}
+            sh 'apk add git curl bash openssl  --no-cache'
+            sh' curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod +x get_helm.sh && ./get_helm.sh'
+            git branch: 'main', url: 'https://github.com/ofirshi/k8s-project1.git'
+            sh 'git clone https://github.com/ofirshi/k8s-project1.git'
+          	sh 'cd k8s-project1/helm/consumer && helm dependency update && helm dependency build && helm upgrade --install consumer . '
             }
 	}
 	}
+    }

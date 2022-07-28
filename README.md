@@ -101,7 +101,6 @@ sudo systemctl enable --now kubelet
 
 sudo -E /usr/local/bin/minikube start --driver=none --kubernetes-version=stable --v=5 --alsologtostderr --extra-config=kubelet.cgroup-driver=systemd,kubeadm.ignore-preflight-errors=SystemVerification
 
-
 ### Modify settings:
 minikube config set cpus 4
 
