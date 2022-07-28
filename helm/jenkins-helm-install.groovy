@@ -1,29 +1,55 @@
-pipeline {
-      agent { kubernetes { 
-            label 'local'
+// https://gbengaoni.com/blog/Kubernetes-CI-CD-with-Helm-and-Jenkins
+podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
+    containerTemplate(
+      name: 'docker', 
+      image: 'docker', 
+      command: 'cat', 
+      resourceRequestCpu: '100m',
+      resourceLimitCpu: '300m',
+      resourceRequestMemory: '300Mi',
+      resourceLimitMemory: '500Mi',
+      ttyEnabled: true
+    ),
 
-        }}
-    stages {
-        stage('install kubectl and Helm') {
-            steps { 
+    containerTemplate(
+      name: 'kubectl', 
+      image: 'bitnami/kubectl',
+      resourceRequestCpu: '100m',
+      resourceLimitCpu: '300m',
+      resourceRequestMemory: '300Mi',
+      resourceLimitMemory: '500Mi', 
+      ttyEnabled: true, 
+      command: 'cat'
+    ),
+    containerTemplate(
+      name: 'helm', 
+      image: 'rancher/helm-controller:v0.12.3', 
+      resourceRequestCpu: '100m',
+      resourceLimitCpu: '300m',
+      resourceRequestMemory: '300Mi',
+      resourceLimitMemory: '500Mi',
+      ttyEnabled: true, 
+      command: 'cat'
+    )
+  ],
+
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+    hostPathVolume(mountPath: '/usr/local/bin/helm', hostPath: '/usr/local/bin/helm')
+  ]
+  ) {
+    node('mypod') {
+        stage('Check running containers') {
+            container('helm') { 
                 sh '''
-			    curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"'
-			    chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl '
-                curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod +x get_helm.sh && ./get_helm.sh'
-                rm -rf k8s-project1/
-                '''
-                
-            }
-        }
-        stage('Deploy helm chart') {
-            steps { 
-                sh '''
+                helm repo add bitnami https://charts.bitnami.com/bitnami
+                helm repo update
+                apk add git
                 git clone https://github.com/ofirshi/k8s-project1
-                cd $WORKSPACE/helm/consumer 
+                cd k8s-project1/helm/consumer 
                 helm dependency update && helm dependency build && helm upgrade --install consumer .
                 '''
             }
-        }
-
+        }         
     }
 }
